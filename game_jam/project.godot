@@ -11,7 +11,15 @@ config_version=3
 [application]
 
 config/name="game-jam"
+run/main_scene="res://stage.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1600
+window/size/height=900
+window/size/fullscreen=true
+mouse_cursor/custom_image="res://pointer.png"
 
 [rendering]
 
