@@ -21,6 +21,10 @@ window/size/height=900
 window/size/fullscreen=true
 mouse_cursor/custom_image="res://pointer.png"
 
+[physics]
+
+common/physics_fps=30
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

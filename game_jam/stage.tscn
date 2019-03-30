@@ -1,19 +1,19 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://backdrop.png" type="Texture" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
-[ext_resource path="res://Itsy.cs" type="Script" id=3]
-[ext_resource path="res://lightcone.png" type="Texture" id=4]
+[ext_resource path="res://Itsy.cs" type="Script" id=2]
+[ext_resource path="res://lightcone.png" type="Texture" id=3]
+[ext_resource path="res://Spider Character.png" type="Texture" id=4]
+[ext_resource path="res://Boot.png" type="Texture" id=5]
 
 [sub_resource type="SpriteFrames" id=1]
 
 animations = [ {
-"frames": [ ExtResource( 2 ) ],
-"loop": false,
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
 "name": "default",
 "speed": 5.0
 } ]
-_sections_unfolded = [ "Resource" ]
 
 [node name="Stage" type="Node" index="0"]
 
@@ -26,22 +26,91 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Itsy" type="AnimatedSprite" parent="." index="1"]
+[node name="Itsy" type="Node2D" parent="." index="1"]
 
 position = Vector2( 793.561, 488.03 )
-frames = SubResource( 1 )
-animation = "default"
-script = ExtResource( 3 )
-_sections_unfolded = [ "Visibility" ]
+script = ExtResource( 2 )
+_sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="Lightcone" type="Sprite" parent="Itsy" index="0"]
 
 position = Vector2( 0, 40 )
 rotation = -1.5708
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 4 )
+scale = Vector2( 0.5, 0.7 )
+texture = ExtResource( 3 )
 offset = Vector2( -300, 0 )
 _sections_unfolded = [ "Offset", "Transform" ]
+
+[node name="Body" type="AnimatedSprite" parent="Itsy" index="1"]
+
+scale = Vector2( 0.4, 0.4 )
+frames = SubResource( 1 )
+animation = "default"
+_sections_unfolded = [ "Transform" ]
+
+[node name="FrontBootLeft" type="Sprite" parent="Itsy" index="2"]
+
+position = Vector2( -29.0899, -62.2519 )
+rotation = 2.39252
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="FrontBootRight" type="Sprite" parent="Itsy" index="3"]
+
+position = Vector2( 26.9927, -60.7889 )
+rotation = 3.88052
+scale = Vector2( -0.4, 0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="ReachBootLeft" type="Sprite" parent="Itsy" index="4"]
+
+position = Vector2( -56.3997, -24.7009 )
+rotation = 2.04584
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="ReachBootRight" type="Sprite" parent="Itsy" index="5"]
+
+position = Vector2( 59.1793, -26.1638 )
+rotation = 4.10306
+scale = Vector2( -0.4, 0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="SupportBootLeft" type="Sprite" parent="Itsy" index="6"]
+
+position = Vector2( -46.1584, 27.4805 )
+rotation = 1.14971
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="SupportBootRight" type="Sprite" parent="Itsy" index="7"]
+
+position = Vector2( 46.012, 28.4557 )
+rotation = 2.13348
+scale = Vector2( 0.4, -0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="BackBootLeft" type="Sprite" parent="Itsy" index="8"]
+
+position = Vector2( -23.2377, 50.4011 )
+rotation = 0.61935
+scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="BackBootRight" type="Sprite" parent="Itsy" index="9"]
+
+position = Vector2( 18.7023, 48.938 )
+rotation = 2.68166
+scale = Vector2( 0.4, -0.4 )
+texture = ExtResource( 5 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="GUI" type="Node2D" parent="." index="2"]
 
@@ -53,10 +122,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 623.0
-margin_top = 324.0
-margin_right = 828.0
-margin_bottom = 405.0
+margin_left = 25.0
+margin_top = 14.0
+margin_right = 230.0
+margin_bottom = 32.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2

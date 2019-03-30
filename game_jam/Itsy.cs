@@ -1,10 +1,59 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace GameJam {
 
-    public class Itsy : AnimatedSprite
+    public class Itsy : Node2D
     {
+
+        private class Boot
+        {
+
+            private const float MOVE_SPEED = 0.6F;
+            private const float RECOVER_SPEED = -1.3F;
+
+            private readonly float threshold;
+            private readonly float offset;
+            private float current;
+            private Sprite sprite;
+            private bool recovering = false;
+
+            public Boot(float threshold, float start, Sprite bootSprite)
+            {
+
+                this.threshold = threshold;
+                sprite = bootSprite;
+
+                current = start;
+                offset = bootSprite.Position.y;
+
+            }
+
+            public void Move(float delta, bool moved)
+            {
+
+                current = (current + delta * (recovering ? RECOVER_SPEED : MOVE_SPEED));
+                sprite.Position = new Vector2(sprite.Position.x, current + offset);
+
+                if (!recovering && current >= threshold)
+                {
+
+                    recovering = true;
+
+                }
+                else if (recovering && current <= 0)
+                {
+
+                    recovering = false;
+
+                }
+
+            }
+
+        }
+
+        private List<Boot> boots = new List<Boot>();
 
         private Vector2 positionBuffer;
         private bool physicsProcessFlipFlop = true;
@@ -16,6 +65,15 @@ namespace GameJam {
 
             Global.Unpause();
             positionBuffer = GetPosition();
+
+            boots.Add(new Boot(20, 19, (Sprite)FindNode("FrontBootLeft")));
+            boots.Add(new Boot(20, 6, (Sprite)FindNode("FrontBootRight")));
+            boots.Add(new Boot(50, 18, (Sprite)FindNode("ReachBootLeft")));
+            boots.Add(new Boot(50, 41, (Sprite)FindNode("ReachBootRight")));
+            boots.Add(new Boot(40, 39, (Sprite)FindNode("SupportBootLeft")));
+            boots.Add(new Boot(40, 20, (Sprite)FindNode("SupportBootRight")));
+            boots.Add(new Boot(30, 8, (Sprite)FindNode("BackBootLeft")));
+            boots.Add(new Boot(30, 24, (Sprite)FindNode("BackBootRight")));
         
         }
 
@@ -31,16 +89,19 @@ namespace GameJam {
                 Vector2 lastPosition = GetPosition();
                 Vector2 newPosition = new Vector2(positionBuffer);
 
-                if (newPosition == lastPosition)
+                bool moved = newPosition != lastPosition;
+                if (moved)
                 {
-                    return;
+
+                    float newDirection = lastPosition.AngleToPoint(newPosition);
+                    newDirection = Mathf.Min((newDirection + 0.05F) * 0.9F, newDirection); //Play with this, possible average over 3 frames or something
+
+                    SetPosition(newPosition);
+                    SetRotation(-newDirection);
+                    
                 }
 
-                float newDirection = lastPosition.AngleToPoint(newPosition);
-                newDirection = Mathf.Min((newDirection + 0.05F) * 0.9F, newDirection); //Play with this, possible average over 3 frames or something
-
-                SetPosition(newPosition);
-                SetRotation(-newDirection);
+                boots.ForEach(b => b.Move(lastPosition.DistanceTo(newPosition), moved));
 
             }
 
@@ -49,7 +110,7 @@ namespace GameJam {
         public override void _PhysicsProcess(float delta)
         {
 
-            physicsProcessFlipFlop ^= true;
+            
             if (physicsProcessFlipFlop)
             {
 
