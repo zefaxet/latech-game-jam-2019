@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class RainSources : Node2D
 {
 
+    private static readonly Random random = new Random();
     private static readonly PackedScene rainDropScene = (PackedScene)ResourceLoader.Load("res://Raindrop.tscn");
 
     private class RainSource
