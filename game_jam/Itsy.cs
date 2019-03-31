@@ -89,7 +89,7 @@ namespace GameJam {
                 Vector2 lastPosition = GetPosition();
                 Vector2 newPosition = new Vector2(positionBuffer);
 
-                bool moved = newPosition != lastPosition;
+                bool moved = lastPosition.DistanceTo(newPosition) > 3;
                 if (moved)
                 {
 
@@ -110,14 +110,8 @@ namespace GameJam {
         public override void _PhysicsProcess(float delta)
         {
 
-            
-            if (physicsProcessFlipFlop)
-            {
-
-                base._PhysicsProcess(delta);
-                positionBuffer = GetViewport().GetMousePosition();
-
-            }
+            base._PhysicsProcess(delta);
+            positionBuffer = GetViewport().GetMousePosition();
 
         }
 
