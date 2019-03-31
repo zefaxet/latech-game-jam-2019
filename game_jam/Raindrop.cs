@@ -1,23 +1,52 @@
 using Godot;
 using System;
 
-public class Raindrop : Area2D
-{
-    
-    public Vector2 Velocity { get; set; }
+namespace GameJam {
 
-    public override void _Ready()
+    public class Raindrop : Area2D
     {
 
-        GD.Print("ready");
-        
-    }
+        public Vector2 Velocity { get; set; }
 
-    public override void _Process(float delta)
-    {
+        private bool active = true;
 
-        Position += Velocity;
-        
+        public override void _Ready()
+        {
+
+
+
+        }
+
+        public override void _Process(float delta)
+        {
+
+            if (active)
+            {
+
+                Position += Velocity;
+                if (GetOverlappingAreas().Contains(Itsy.ITSY_AREA))
+                {
+
+                    GD.Print("FOUDN IT");
+                    Collide();
+
+                }
+
+            }
+
+        }
+
+        private void Collide()
+        {
+
+            active = false;
+            AnimatedSprite sprite = (AnimatedSprite) FindNode("Sprite");
+            sprite.Animation = "collide";
+            sprite.Playing = true;
+
+
+        }
+
     }
 
 }

@@ -7,6 +7,8 @@ namespace GameJam {
     public class Itsy : Node2D
     {
 
+        public static Area2D ITSY_AREA;
+
         private class Boot
         {
 
@@ -62,6 +64,8 @@ namespace GameJam {
 
         public override void _Ready()
         {
+
+            ITSY_AREA = (Area2D) FindNode("Area");
 
             Global.Unpause();
             positionBuffer = GetPosition();
