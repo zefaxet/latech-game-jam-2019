@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Raindrop.cs" type="Script" id=1]
 [ext_resource path="res://raindrop/Raindrop.png" type="Texture" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://raindrop/Raindrop9.png" type="Texture" id=10]
 [ext_resource path="res://raindrop/Raindrop10.png" type="Texture" id=11]
 [ext_resource path="res://raindrop/Raindrop11.png" type="Texture" id=12]
+[ext_resource path="res://raindrop/Wind Wisps.png" type="Texture" id=13]
 
 [sub_resource type="CapsuleShape2D" id=1]
 
@@ -31,9 +32,14 @@ animations = [ {
 "loop": false,
 "name": "collide",
 "speed": 60.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": true,
+"name": "wind",
+"speed": 5.0
 } ]
 
-[node name="Raindrop" type="Area2D" index="0"]
+[node name="Raindrop" type="Area2D"]
 
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )

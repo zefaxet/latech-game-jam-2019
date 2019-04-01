@@ -6,8 +6,10 @@ namespace GameJam {
 
     public class Itsy : Node2D
     {
-
+        
         public static Area2D ITSY_AREA;
+        public static Area2D LIGHTCONE_AREA;
+        public static Itsy ITSY;
 
         private class Boot
         {
@@ -61,13 +63,33 @@ namespace GameJam {
         private bool physicsProcessFlipFlop = true;
         private bool live = true; //TODO move to game starting
         private double liveTime = 0.0;
+        private float invincibility = 0;
+        private int HP = 3;
+
+        private System.IO.StreamReader file;
+
+        private AnimatedSprite hourglass;
+        private float highscore;
 
         public override void _Ready()
         {
 
-            ITSY_AREA = (Area2D) FindNode("Area");
+            string lineOfText;
+            //READLINE
+            var filestream = new System.IO.FileStream("C:\\Users\\Mr. Looks Delicious\\Desktop\\latech-game-jam-2019\\score.txt",
+                                          System.IO.FileMode.Open,
+                                          System.IO.FileAccess.Read,
+                                          System.IO.FileShare.ReadWrite);
+            file = new System.IO.StreamReader(filestream, System.Text.Encoding.UTF8, true, 128);
 
-            Global.Unpause();
+            lineOfText = file.ReadLine();
+
+            ITSY_AREA = (Area2D) FindNode("Area");
+            LIGHTCONE_AREA = (Area2D)FindNode("LightconeArea");
+            ITSY = this;
+            hourglass = (AnimatedSprite)FindNode("Hourglass");
+            Global.stage = GetNode(new NodePath("/root/Stage"));
+
             positionBuffer = GetPosition();
 
             boots.Add(new Boot(20, 19, (Sprite)FindNode("FrontBootLeft")));
@@ -78,13 +100,34 @@ namespace GameJam {
             boots.Add(new Boot(40, 20, (Sprite)FindNode("SupportBootRight")));
             boots.Add(new Boot(30, 8, (Sprite)FindNode("BackBootLeft")));
             boots.Add(new Boot(30, 24, (Sprite)FindNode("BackBootRight")));
-        
+
+            ((Label)GetNode(new NodePath("/root/Stage/GUI/Label"))).Text = liveTime.ToString();
+            ((Label)GetNode(new NodePath("/root/Stage/GUI/Label4"))).Text = lineOfText;
+            highscore = float.Parse(lineOfText);
+
         }
 
         public override void _Process(float delta)
         {
 
-            if (live)
+            if (!hourglasstoken.exists && RainSources.random.Next(0, 150) == 1)
+            {
+
+                hourglasstoken hourglass = (hourglasstoken)hourglasstoken.hourglassScene.Instance();
+                hourglass.Position = new Vector2(RainSources.random.Next(100, 1500), RainSources.random.Next(100, 800));
+                Global.stage.FindNode("HourGlass").AddChild(hourglass);
+                hourglasstoken.exists = true;
+                hourglasstoken.thisone = hourglass;
+
+            }
+
+            if (Global.Paused)
+            {
+
+                if(Input.IsActionJustPressed("ui_accept")) Global.Unpause();
+
+            }
+            else if (live && !Global.Paused)
             {
 
                 liveTime += delta;
@@ -109,13 +152,60 @@ namespace GameJam {
 
             }
 
+            if (ITSY_AREA.GetOverlappingAreas().Contains(hourglasstoken.thisone))
+            {
+                Damage(-1);
+                hourglasstoken.thisone.QueueFree();
+                hourglasstoken.exists = false;
+                invincibility = 2;
+
+            }
+            else
+            {
+
+                invincibility -= delta;
+                invincibility = Mathf.Max(invincibility, 0);
+
+            }
+
         }
 
         public override void _PhysicsProcess(float delta)
         {
 
-            base._PhysicsProcess(delta);
-            positionBuffer = GetViewport().GetMousePosition();
+            if (!Global.Paused)
+            {
+
+                base._PhysicsProcess(delta);
+                positionBuffer = GetViewport().GetMousePosition();
+
+            }
+
+        }
+
+        public void Damage(int amount = 1)
+        {
+
+            if (HP > 0 && invincibility == 0)
+            {
+
+                HP = Math.Min(HP - amount, 3);
+                hourglass.Animation = HP.ToString();
+                if (HP == 0)
+                {
+                    //Hide hourglass
+                    //Game over
+                    live = false;
+                    GD.Print("Game Over");
+                    Global.GameOver();
+                    if (liveTime > highscore)
+                    {
+                        System.IO.File.WriteAllText("C:\\Users\\Mr. Looks Delicious\\Desktop\\latech-game-jam-2019\\score.txt", liveTime.ToString());
+                    }
+
+                }
+
+            }
 
         }
 

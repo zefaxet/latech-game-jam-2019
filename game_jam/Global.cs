@@ -11,7 +11,9 @@ namespace GameJam
     public class Global
     {
 
-        public static bool Paused { get; private set; } = false;
+        public static Node stage;
+
+        public static bool Paused { get; private set; } = true;
 
         public static void Pause()
         {
@@ -26,8 +28,17 @@ namespace GameJam
         {
 
             GD.Print("Unpaused...");
+            ((AnimatedSprite)stage.FindNode("GameOver")).Animation = "default";
+            stage.FindNode("Play").QueueFree();
             Input.SetMouseMode(Input.MouseMode.Confined);
             Paused = false;
+
+        }
+
+        public static void GameOver()
+        {
+
+            ((AnimatedSprite)stage.FindNode("GameOver")).Animation = new Random().Next(4).ToString();
 
         }
 
